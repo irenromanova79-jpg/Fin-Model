@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IRIX PROFIT — учебная финмодель</title>
+<style>
+:root{
+  /* тёмно-золотая тема — по умолчанию */
+  --bg:#1A1711; --panel:#25211A; --panel2:#2F2A21; --line:#3E382A;
+  --acc:#F0DAA0; --acc2:#C7A768; --text:#F1EDE2; --mute:#9C9587; --bad:#F0705C;
+  --chip:#B14CFF; --chipTx:#FFFFFF; --sub2:#D5CFBE;
+  --heroBg:linear-gradient(160deg,#2A1544,#231E19); --heroLine:#B14CFF;
+  --heroGlow:0 0 22px rgba(177,76,255,.22);
+  --secBg:#2C2618; --totBg:#332C1E; --rowAlt:#201C15;
+  --modelTint:rgba(177,76,255,.12); --shadow:none;
+  --inBg:#3A2A12; --inLine:#C7A768; --inTx:#FFE7B0;
+  --logo1:#F0DAA0; --logo2:#D3AE66; --logo3:#B14CFF; --eyebrow:#C7A768;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#F4F7F5; --panel:#FFFFFF; --panel2:#EEF3F0; --line:#DBE4DF;
+  --acc:#00B874; --acc2:#00976A; --text:#0D1B16; --mute:#6B7B74; --bad:#C9402C;
+  --chip:#00E38A; --chipTx:#07110D; --sub2:#3F4E47;
+  --heroBg:linear-gradient(160deg,#E8FAF1,#FFFFFF); --heroLine:#00976A; --heroGlow:none;
+  --secBg:#E9F5EF; --totBg:#F1F7F4; --rowAlt:#F8FAF9;
+  --modelTint:rgba(0,184,116,.07); --shadow:0 1px 2px rgba(13,27,22,.05);
+  --inBg:#FFF7DC; --inLine:#C9A227; --inTx:#5A4405;
+  --logo1:#00E38A; --logo2:#00C97C; --logo3:#00A868; --eyebrow:var(--mute);
+}
+:root[data-theme="dark"]{
+  --bg:#0D1B16; --panel:#151A19; --panel2:#1B2320; --line:#26332D;
+  --acc:#00E38A; --acc2:#00B874; --text:#F2F2F2; --mute:#7C8B84; --bad:#FF6B5A;
+  --chip:#00E38A; --chipTx:#07110D; --sub2:#B9C7C0;
+  --heroBg:linear-gradient(160deg,#12241D,#151A19); --heroLine:#00B874; --heroGlow:none;
+  --secBg:#101A16; --totBg:#17231E; --rowAlt:#181F1C;
+  --modelTint:rgba(0,227,138,.07); --shadow:none;
+  --inBg:#2B2A16; --inLine:#C8B84A; --inTx:#F4EDA8;
+  --logo1:#00E38A; --logo2:#00C97C; --logo3:#00A868; --eyebrow:var(--mute);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--eyebrow);font-weight:600}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+
+header{position:sticky;top:0;z-index:40;background:var(--bg);background:color-mix(in srgb,var(--bg) 93%,transparent);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hwrap{display:flex;align-items:center;gap:12px;padding:11px 20px;flex-wrap:wrap}
+@media (max-width:1040px){.hwrap{padding:10px 12px}}
+.brand{display:flex;align-items:center;gap:11px}
+.brand svg{width:26px;height:29px;display:block}
+.brand b{font-size:17px;letter-spacing:.06em;color:var(--acc)}
+.brand span{color:var(--mute);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.spacer{flex:1}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:transparent;border:0;color:var(--mute);font:inherit;font-size:12px;padding:7px 13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--chip);color:var(--chipTx);font-weight:700}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--text);font:inherit;font-size:12px;padding:7px 13px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--chip)}
+.btn:focus-visible,.seg button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--chip);outline-offset:2px}
+
+main{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;padding:16px 20px 50px;align-items:start}
+@media (max-width:1100px){main{grid-template-columns:minmax(0,1fr);padding:14px 12px 40px}}
+
+/* ---------- дашборд сбоку ---------- */
+aside{position:sticky;top:60px;max-height:calc(100vh - 76px);overflow:auto;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+@media (max-width:1100px){aside{position:static;max-height:none}}
+.dhead{padding:11px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.dhead select{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--text);
+  font:inherit;font-size:12px;border-radius:6px;padding:5px 7px}
+.dcols{display:grid;grid-template-columns:1fr 84px 84px;gap:4px;padding:8px 14px 4px;
+  font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute);text-align:right}
+.dcols span:first-child{text-align:left}
+.drow{display:grid;grid-template-columns:1fr 84px 84px;gap:4px;padding:5px 14px;align-items:baseline;
+  border-top:1px solid var(--line);border-top-color:color-mix(in srgb,var(--line) 55%,transparent)}
+.drow .n{font-size:11.5px;color:var(--sub2);text-align:left}
+.drow .a,.drow .b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;text-align:right}
+.drow .b{color:var(--mute)}
+.drow.big{padding:9px 14px;background:var(--heroBg);border-top:1px solid var(--heroLine)}
+.drow.big .n{font-size:11px;font-weight:600;color:var(--text)}
+.drow.big .a{font-size:15px;font-weight:600}
+.drow.rel .a,.drow.rel .b{color:var(--acc2)}
+.pos{color:var(--acc)} .neg{color:var(--bad)}
+.dfoot{padding:10px 14px 14px;font-size:10.5px;color:var(--mute);line-height:1.4;border-top:1px solid var(--line)}
+
+/* ---------- таблица ---------- */
+.tw{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:var(--shadow)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px}
+th,td{padding:5px 10px;white-space:nowrap;border-bottom:1px solid var(--line)}
+thead th{position:sticky;top:0;background:var(--panel2);z-index:5;font-weight:600;font-size:10.5px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--eyebrow);text-align:right}
+thead th.c1{text-align:left;left:0;z-index:7;min-width:258px;max-width:258px}
+thead th.c2{text-align:center;left:var(--c1w,258px);z-index:7;min-width:112px;box-shadow:6px 0 7px -6px rgba(0,0,0,.55)}
+tbody th.c1{position:sticky;left:0;background:var(--panel);text-align:left;font-weight:400;z-index:3;
+  min-width:258px;max-width:258px;white-space:normal}
+tbody td.c2{position:sticky;left:var(--c1w,258px);background:var(--panel);z-index:3;text-align:center;min-width:112px;
+  box-shadow:6px 0 7px -6px rgba(0,0,0,.55)}
+tbody tr:nth-child(even) th.c1,tbody tr:nth-child(even) td.c2,tbody tr:nth-child(even) td{background:var(--rowAlt)}
+td{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr.sec th,tr.sec td{background:var(--secBg)!important}
+tr.sec th.c1{color:var(--acc);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+tr.tot th.c1,tr.tot td{font-weight:700;background:var(--totBg)!important}
+tr.tot td{border-top:1px solid var(--acc2)}
+tr.pctrow td:not(.c2){color:var(--mute)}
+td.col-model{background:var(--modelTint)}
+th.col-model{color:var(--acc)}
+td.tcol{border-left:1px solid var(--line);font-weight:700}
+th.c1.sub{padding-left:24px;color:var(--sub2)}
+/* ячейки ввода */
+.inp{width:88px;background:var(--inBg);border:1px solid var(--inLine);border-radius:5px;color:var(--inTx);
+  font-family:var(--mono);font-size:11.5px;text-align:right;padding:3px 5px}
+.inp:hover{border-color:var(--chip)}
+.unit{font-size:10px;color:var(--mute);margin-left:3px}
+.chk{width:14px;height:14px;accent-color:var(--chip);vertical-align:-2px;margin-right:5px}
+footer{padding:14px 20px 40px;color:var(--mute);font-size:11.5px;max-width:1020px}
+footer b{color:var(--text);font-weight:600}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 10px;font-size:11px;color:var(--mute);align-items:center}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+.lg-in{background:var(--inBg);border:1px solid var(--inLine)}
+.lg-md{background:var(--modelTint);border:1px solid var(--line)}
+@media print{
+  tbody td.c2,thead th.c2{box-shadow:none}
+  :root,:root[data-theme="dark"],:root[data-theme="light"]{--bg:#fff;--panel:#fff;--panel2:#f2f2f2;--line:#bbb;
+    --text:#000;--mute:#555;--secBg:#f1ece0;--totBg:#f6f4ee;--rowAlt:#fafafa;--modelTint:#f7f3fb;--shadow:none;
+    --sub2:#333;--acc:#8a6d24;--acc2:#8a6d24;--eyebrow:#7a6224;--chip:#7A2ECC;--heroBg:#f6f4ee;--heroLine:#bbb;
+    --heroGlow:none;--inBg:#fff;--inLine:#999;--inTx:#000}
+  header,.noprint{display:none!important}
+  main{display:block;padding:0}
+  aside{position:static;max-height:none;page-break-after:always;width:280px}
+  .tw{overflow:visible}
+  thead th,tbody th.c1,tbody td.c2{position:static}
+  @page{size:A4 landscape;margin:9mm}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="brand">
+      <svg viewBox="0 0 140 155" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--logo1)"/><stop offset=".55" stop-color="var(--logo2)"/><stop offset="1" stop-color="var(--logo3)"/>
+      </linearGradient></defs>
+      <path d="M15,0 L140,0 L77.5,63 Z" fill="url(#g)"/>
+      <path d="M0,15 L140,155 L96,155 L47.5,107.5 L0,155 Z" fill="url(#g)"/></svg>
+      <div><b>IRIX PROFIT</b><br><span>учебная финмодель · ООО «Практикум», мебельное производство</span></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="seg" role="group" aria-label="Режим расчёта">
+      <button id="mFact" aria-pressed="true">Факт + модель</button>
+      <button id="mModel" aria-pressed="false">Только модель</button>
+    </div>
+    <button class="btn" id="theme">Тема: тёмно-золотая</button>
+    <button class="btn" id="reset">Вернуть факт</button>
+    <button class="btn" id="csv">Скачать CSV</button>
+    <button class="btn" id="print">Печать</button>
+  </div>
+</header>
+
+<main>
+<aside aria-label="Дашборд">
+  <div class="dhead">
+    <span class="eyebrow">Дашборд</span>
+    <select id="mon" aria-label="Месяц"></select>
+  </div>
+  <div class="dcols"><span>Показатель</span><span>За месяц</span><span>Накопит.</span></div>
+  <div id="dash"></div>
+  <div class="dfoot" id="dfoot"></div>
+</aside>
+
+<section>
+  <div class="legend noprint">
+    <span><i class="lg-in"></i>ячейки ввода — параметры модели</span>
+    <span><i class="lg-md"></i>месяцы, посчитанные моделью</span>
+  </div>
+  <div class="tw"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+  <footer>
+    <p><b>Учебный пример.</b> Данные вымышленные: мебельное производство, 5 товарных групп, 6 сотрудников АУП. Цифры подобраны так, чтобы структура затрат была узнаваемой — материалы 35 % выручки, зарплата производства 12 %, аренда и АУП в постоянных, — а арифметика легко проверялась вручную.</p>
+    <p><b>Как читать.</b> Столбец «Параметр» — драйверы модели: проценты от выручки для производства и рубли в месяц для постоянных расходов. Меняете параметр — пересчитываются модельные месяцы и дашборд. Янв–июн — «факт», июль — выручка факт, расходы по модели, авг–дек — прогноз от июля на заданный темп роста.</p>
+    <p><b>Что попробовать на занятии.</b> 1) Переключите режим на «Только модель» и сравните с фактом — увидите, где нормативы не описывают реальность. 2) Поднимите материалы с 35 % до 40 % и посмотрите, что станет с точкой безубыточности. 3) Снимите галочку субподряда и объясните разницу между переменной и постоянной статьёй. 4) Задайте темп роста выручки 5 % в месяц и сравните накопительный итог на дашборде.</p>
+  </footer>
+</section>
+</main>
+
+<script>
+const DATA = {"months":["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"],"factN":6,"groups":[{"name":"Шкафы-купе","v":[1176000.0,1085280.0,1247400.0,1470560.0,1730400.0,1856400.0,1688960.0],"q":[42.0,38.0,45.0,52.0,60.0,65.0,58.0]},{"name":"Кухонные гарнитуры","v":[780000.0,637000.0,919100.0,1060800.0,1300000.0,1472900.0,1193400.0],"q":[12.0,10.0,14.0,16.0,20.0,22.0,18.0]},{"name":"Столы и стулья","v":[765000.0,636300.0,855000.0,980100.0,1193400.0,1272600.0,1112400.0],"q":[85.0,70.0,95.0,110.0,130.0,140.0,120.0]},{"name":"Комплектующие и фурнитура","v":[720000.0,624000.0,824160.0,929200.0,1071200.0,1142400.0,1020000.0],"q":[900.0,780.0,1010.0,1150.0,1300.0,1400.0,1250.0]},{"name":"Доставка и сборка","v":[247500.0,216000.0,270000.0,321300.0,376380.0,407880.0,352260.0],"q":[55.0,48.0,60.0,70.0,82.0,88.0,76.0]}],"direct":[["Материалы (сырьё, плиты, фурнитура)",[1329704.25,1108307.97,1454885.81,1616685.42,2024682.66,2110197.74]],["Вспомогательные и расходные материалы",[66393.0,70368.76,82313.2,100001.16,107756.22,123043.6]],["Зарплата производственного персонала",[464751.0,391506.19,484001.62,571435.2,660148.63,730878.98]],["Ремонт и содержание оборудования",[14754.0,57574.44,24693.96,57143.52,51042.42,67673.98]],["Аренда спецтехники и оснастки",[55327.5,38382.96,74081.88,71429.4,93577.77,83054.43]],["Комиссия партнёру (дилерские)",[25819.5,31985.8,45272.26,57143.52,56713.8,61521.8]],["Доставка (оплата перевозчикам)",[49794.75,47978.7,64821.64,71429.4,93577.77,87668.56]],["Премии менеджерам",[59016.0,57574.44,82313.2,104763.12,130441.74,129195.78]]],"subTotal":2207060.8,"fixed":[["Аренда производственного помещения",[250000,250000,250000,250000,250000,250000]],["Аренда склада",[120000,120000,120000,120000,120000,120000]],["Связь и интернет",[12000,12000,12000,12000,12000,12000]],["Сервер 1С и хостинг",[9000,9000,9000,9000,9000,9000]],["Программное обеспечение и лицензии",[0,0,54000,0,0,54000]],["Домен и сайт",[0,0,24000,0,0,0]],["Услуги банка",[14200,15800,16400,15100,17300,16900]],["Реклама и маркетинг",[60000,80000,90000,110000,120000,100000]],["Бухгалтерские и юридические услуги",[20000,20000,20000,20000,20000,20000]],["Прочие управленческие расходы",[33500,36200,34800,38100,35400,37000]],["Прочие постоянные (хозрасходы)",[9400,10600,10100,11200,9800,10500]]],"utilities":[62160.0,59940.0,55500.0,51060.0,48840.0,49950.0],"salary":[["Директор",[120000,120000,120000,120000,120000,120000]],["Главный бухгалтер",[90000,90000,90000,90000,90000,90000]],["Финансовый менеджер",[0,0,0,70000,70000,70000]],["Менеджер по продажам",[60000,60000,60000,65000,65000,65000]],["Специалист по закупкам",[55000,55000,55000,55000,60000,60000]],["Офис-менеджер",[40000,40000,40000,40000,40000,40000]]],"fin":[["Проценты по кредиту",[30000,29000,28000,26500,25000,23500]],["Амортизация",[40000,40000,40000,40000,40000,40000]]]};
+const M=DATA.months, N=12, F=DATA.factN;
+const sum=a=>a.reduce((x,y)=>x+(+y||0),0);
+const rub=v=>(v==null||!isFinite(v))?"—":(Math.round(v)===0?"—":new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(Math.round(v)));
+const pc=v=>!isFinite(v)?"—":new Intl.NumberFormat("ru-RU",{minimumFractionDigits:1,maximumFractionDigits:1}).format(v*100)+"%";
+
+const revF=i=>sum(DATA.groups.map(g=>g.v[i]||0));
+const rev6=sum([0,1,2,3,4,5].map(revF));
+const SUBN="Субподряд (сторонние бригады)";
+const base={};
+DATA.direct.forEach(([n,v])=>base["p:"+n]=sum(v)/rev6*100);
+base["p:"+SUBN]=DATA.subTotal/rev6*100;
+DATA.fixed.forEach(([n,v])=>base["f:"+n]=sum(v)/6);
+base.util=sum(DATA.utilities)/(sum(DATA.fixed[0][1])+sum(DATA.fixed[1][1]))*100;
+DATA.salary.forEach(([n,v])=>base["z:"+n]=v[5]);
+DATA.fin.forEach(([n,v])=>base["o:"+n]=sum(v)/6);
+base.growth=0;
+const D=Object.assign({},base);
+let subOn=true, mode="fact", mon=5;
+
+/* ---------- расчёт ---------- */
+function calc(){
+  const r={rev:[],direct:[],sub:[],gross:[],fix:[],fin:[],ebitda:[],np:[],bep:[],
+           dir:[],fx:[],sal:[],fn:[],grp:[],qty:[],chk:[],util:[]};
+  DATA.direct.forEach(()=>r.dir.push([])); DATA.fixed.forEach(()=>r.fx.push([]));
+  DATA.salary.forEach(()=>r.sal.push([])); DATA.fin.forEach(()=>r.fn.push([]));
+  DATA.groups.forEach(()=>{r.grp.push([]);r.qty.push([]);r.chk.push([]);});
+  for(let i=0;i<N;i++){
+    const isFact=(mode==="fact"&&i<F);
+    let rev = i<7 ? revF(i) : r.rev[i-1]*(1+D.growth/100);
+    r.rev.push(rev);
+    DATA.groups.forEach((g,k)=>{
+      const v=i<7?g.v[i]:r.grp[k][i-1]*(1+D.growth/100);
+      const q=i<7?g.q[i]:r.qty[k][i-1]*(1+D.growth/100);
+      r.grp[k].push(v); r.qty[k].push(q); r.chk[k].push(q?v/q:0);
+    });
+    let dir=0;
+    DATA.direct.forEach(([n,v],k)=>{const x=isFact?v[i]:rev*D["p:"+n]/100; r.dir[k].push(x); dir+=x;});
+    const sb=subOn?rev*D["p:"+SUBN]/100:0;
+    r.sub.push(sb); r.direct.push(dir+sb); r.gross.push(rev-dir-sb);
+    let fx=0,rent=0;
+    DATA.fixed.forEach(([n,v],k)=>{const x=isFact?v[i]:D["f:"+n]; r.fx[k].push(x); fx+=x; if(k<2)rent+=x;});
+    const u=isFact?DATA.utilities[i]:rent*D.util/100; r.util.push(u); fx+=u;
+    let sal=0;
+    DATA.salary.forEach(([n,v],k)=>{const x=isFact?v[i]:D["z:"+n]; r.sal[k].push(x); sal+=x;});
+    fx+=sal; r.fix.push(fx);
+    let fin=0;
+    DATA.fin.forEach(([n,v],k)=>{const x=isFact?v[i]:D["o:"+n]; r.fn[k].push(x); fin+=x;});
+    r.fin.push(fin);
+    const eb=r.gross[i]-fx; r.ebitda.push(eb); r.np.push(eb-fin);
+    const mg=rev?r.gross[i]/rev:0;
+    r.bep.push(mg>0?(fx+fin)/mg:NaN);
+  }
+  r.salTot=r.rev.map((_,i)=>sum(r.sal.map(x=>x[i])));
+  return r;
+}
+
+/* ---------- дашборд ---------- */
+function renderDash(r){
+  const acc=k=>sum(r[k].slice(0,mon+1));
+  const mv={rev:r.rev[mon],dir:r.direct[mon],gross:r.gross[mon],fix:r.fix[mon],
+            fin:r.fin[mon],eb:r.ebitda[mon],np:r.np[mon]};
+  const av={rev:acc("rev"),dir:acc("direct"),gross:acc("gross"),fix:acc("fix"),
+            fin:acc("fin"),eb:acc("ebitda"),np:acc("np")};
+  const bepM=mv.gross>0?(mv.fix+mv.fin)/(mv.gross/mv.rev):NaN;
+  const bepA=av.gross>0?(av.fix+av.fin)/(av.gross/av.rev):NaN;
+  const row=(n,a,b,cls)=>'<div class="drow '+(cls||"")+'"><span class="n">'+n+'</span>'+
+      '<span class="a">'+a+'</span><span class="b">'+b+'</span></div>';
+  const sign=v=>'<span class="'+(v<0?"neg":"pos")+'">'+rub(v)+'</span>';
+  document.getElementById("dash").innerHTML=
+    row("Выручка",rub(mv.rev),rub(av.rev),"big")+
+    row("Прямые затраты",rub(mv.dir),rub(av.dir))+
+    row("Доля прямых в выручке",pc(mv.dir/mv.rev),pc(av.dir/av.rev),"rel")+
+    row("Валовая прибыль",rub(mv.gross),rub(av.gross))+
+    row("Маржинальность",pc(mv.gross/mv.rev),pc(av.gross/av.rev),"rel")+
+    row("Постоянные расходы",rub(mv.fix),rub(av.fix))+
+    row("Доля постоянных",pc(mv.fix/mv.rev),pc(av.fix/av.rev),"rel")+
+    row("EBITDA",sign(mv.eb),rub(av.eb))+
+    row("Рентабельность EBITDA",pc(mv.eb/mv.rev),pc(av.eb/av.rev),"rel")+
+    row("Проценты и амортизация",rub(mv.fin),rub(av.fin))+
+    row("Чистая прибыль",sign(mv.np),rub(av.np),"big")+
+    row("Рентабельность чистой",pc(mv.np/mv.rev),pc(av.np/av.rev),"rel")+
+    row("Точка безубыточности",rub(bepM),rub(bepA))+
+    row("Запас прочности",pc((mv.rev-bepM)/mv.rev),pc((av.rev-bepA)/av.rev),"rel");
+  document.getElementById("dfoot").textContent=
+    (mode==="fact"&&mon<F ? "Выбран фактический месяц. " : "Выбранный месяц посчитан моделью. ")+
+    "Накопительно — с января по "+M[mon]+" включительно.";
+}
+
+/* ---------- таблица ---------- */
+let ROWS=[], built=false;
+function defRows(){
+  const R=[];
+  const sec=t=>R.push({sec:t});
+  sec("Выручка");
+  DATA.groups.forEach((g,k)=>R.push({n:g.name,sub:1,get:r=>r.grp[k]}));
+  R.push({n:"Выручка, всего",tot:1,get:r=>r.rev,key:"growth",unit:"%",
+          hint:"рост к пред. месяцу, авг–дек"});
+  sec("Средний чек, ₽ за единицу");
+  DATA.groups.forEach((g,k)=>R.push({n:g.name,sub:1,get:r=>r.chk[k]}));
+  sec("Прямые (производственные) затраты · % от выручки");
+  DATA.direct.forEach(([n],k)=>R.push({n:n,sub:1,key:"p:"+n,unit:"%",get:r=>r.dir[k]}));
+  R.push({n:SUBN,sub:1,key:"p:"+SUBN,unit:"%",chk:1,get:r=>r.sub});
+  R.push({n:"Итого прямые затраты",tot:1,get:r=>r.direct});
+  R.push({n:"Доля прямых затрат в выручке",pct:1,get:r=>r.direct.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.direct)/sum(r.rev)});
+  sec("Валовая прибыль");
+  R.push({n:"Валовая прибыль",tot:1,get:r=>r.gross});
+  R.push({n:"Маржинальность",pct:1,get:r=>r.gross.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.gross)/sum(r.rev)});
+  sec("Постоянные расходы · ₽ в месяц");
+  DATA.fixed.forEach(([n],k)=>R.push({n:n,sub:1,key:"f:"+n,unit:"₽",get:r=>r.fx[k]}));
+  R.push({n:"Коммунальные услуги",sub:1,key:"util",unit:"%",hint:"от аренды",get:r=>r.util});
+  DATA.salary.forEach(([n],k)=>R.push({n:"ЗП АУП · "+n,sub:1,key:"z:"+n,unit:"₽",get:r=>r.sal[k]}));
+  R.push({n:"Итого ЗП АУП",tot:1,get:r=>r.salTot});
+  R.push({n:"Итого постоянные расходы",tot:1,get:r=>r.fix});
+  sec("Результат");
+  R.push({n:"EBITDA",tot:1,get:r=>r.ebitda});
+  DATA.fin.forEach(([n],k)=>R.push({n:n,sub:1,key:"o:"+n,unit:"₽",get:r=>r.fn[k]}));
+  R.push({n:"Чистая прибыль",tot:1,get:r=>r.np});
+  R.push({n:"Рентабельность по чистой прибыли",pct:1,get:r=>r.np.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.np)/sum(r.rev)});
+  R.push({n:"Точка безубыточности",get:r=>r.bep,totv:r=>(sum(r.fix)+sum(r.fin))/(sum(r.gross)/sum(r.rev))});
+  return R;
+}
+function buildTable(){
+  ROWS=defRows();
+  document.querySelector("#tbl thead").innerHTML=
+    '<tr><th class="c1">Показатель</th><th class="c2">Параметр</th>'+
+    M.map(m=>'<th data-m="1">'+m+'</th>').join("")+'<th>Итого</th></tr>';
+  const tb=document.querySelector("#tbl tbody"); tb.innerHTML="";
+  ROWS.forEach(rw=>{
+    const tr=document.createElement("tr");
+    if(rw.sec){
+      tr.className="sec";
+      tr.innerHTML='<th class="c1">'+rw.sec+'</th><td class="c2"></td>'+
+        M.map(()=>'<td></td>').join("")+'<td class="tcol"></td>';
+      tb.appendChild(tr); rw.tr=tr; return;
+    }
+    tr.className=(rw.tot?"tot ":"")+(rw.pct?"pctrow":"");
+    let param="";
+    if(rw.key){
+      param=(rw.chk?'<input type="checkbox" class="chk" id="subOn" checked title="Учитывать субподряд">':'')+
+        '<input class="inp" type="number" step="'+(rw.unit==="%"?"0.1":"500")+'" data-k="'+rw.key+'" data-u="'+rw.unit+'">'+
+        '<span class="unit">'+rw.unit+'</span>';
+    }
+    tr.innerHTML='<th class="c1'+(rw.sub?" sub":"")+'">'+rw.n+'</th>'+
+      '<td class="c2">'+param+'</td>'+M.map(()=>'<td></td>').join("")+'<td class="tcol"></td>';
+    tb.appendChild(tr); rw.tr=tr;
+    if(rw.key){
+      const inp=tr.querySelector(".inp");
+      inp.value=(rw.unit==='%')?Math.round(D[rw.key]*100)/100:Math.round(D[rw.key]);
+      if(rw.hint) inp.title=rw.hint;
+      inp.addEventListener("input",()=>{D[rw.key]=parseFloat(inp.value)||0; update();});
+    }
+  });
+  const sw=document.getElementById("subOn");
+  if(sw) sw.addEventListener("change",e=>{subOn=e.target.checked; update();});
+  built=true;
+}
+function update(){
+  const r=calc();
+  document.querySelectorAll("#tbl thead th[data-m]").forEach((th,i)=>{
+    th.classList.toggle("col-model",!(mode==="fact"&&i<F));
+  });
+  ROWS.forEach(rw=>{
+    if(rw.sec) return;
+    const v=rw.get(r), tds=rw.tr.querySelectorAll("td");
+    for(let i=0;i<N;i++){
+      const td=tds[i+1];
+      td.textContent=rw.pct?pc(v[i]):rub(v[i]);
+      td.classList.toggle("col-model",!(mode==="fact"&&i<F));
+      if(!rw.pct&&v[i]<0) td.classList.add("neg"); else td.classList.remove("neg");
+    }
+    tds[N+1].textContent=rw.totv?(rw.pct?pc(rw.totv(r)):rub(rw.totv(r))):(rw.pct?pc(sum(v)/N):rub(sum(v)));
+  });
+  renderDash(r); fitSticky();
+  window._last=r;
+}
+
+function fitSticky(){
+  const h=document.querySelector("#tbl thead th.c1");
+  if(h) document.documentElement.style.setProperty("--c1w",Math.round(h.getBoundingClientRect().width)+"px");
+}
+window.addEventListener("resize",fitSticky);
+
+/* ---------- управление ---------- */
+const monSel=document.getElementById("mon");
+monSel.innerHTML=M.map((m,i)=>'<option value="'+i+'">'+m+' 2026'+(i<F?" · факт":" · модель")+'</option>').join("");
+monSel.value=mon;
+monSel.onchange=e=>{mon=+e.target.value; update();};
+function setMode(m){
+  mode=m;
+  document.getElementById("mFact").setAttribute("aria-pressed",m==="fact");
+  document.getElementById("mModel").setAttribute("aria-pressed",m==="model");
+  monSel.innerHTML=M.map((x,i)=>'<option value="'+i+'">'+x+' 2026'+(m==="fact"&&i<F?" · факт":" · модель")+'</option>').join("");
+  monSel.value=mon; update();
+}
+document.getElementById("mFact").onclick=()=>setMode("fact");
+document.getElementById("mModel").onclick=()=>setMode("model");
+document.getElementById("reset").onclick=()=>{
+  Object.assign(D,base); subOn=true;
+  const sw=document.getElementById("subOn"); if(sw) sw.checked=true;
+  document.querySelectorAll("#tbl .inp").forEach(i=>i.value=(i.dataset.u==="%")?Math.round(D[i.dataset.k]*100)/100:Math.round(D[i.dataset.k]));
+  update();
+};
+const THEMES=[["gold","тёмно-золотая"],["light","светлая"],["dark","изумрудная"]];
+let ti=0;
+document.getElementById("theme").onclick=e=>{
+  ti=(ti+1)%THEMES.length;
+  document.documentElement.setAttribute("data-theme",THEMES[ti][0]);
+  e.target.textContent="Тема: "+THEMES[ti][1];
+};
+document.getElementById("print").onclick=()=>window.print();
+document.getElementById("csv").onclick=()=>{
+  const rows=[["Показатель","Параметр",...M,"Итого"]];
+  document.querySelectorAll("#tbl tbody tr").forEach(tr=>{
+    const cells=[...tr.querySelectorAll("th,td")].map(c=>{
+      const inp=c.querySelector(".inp");
+      return (inp?inp.value:c.textContent).replace(/\u00a0/g," ").replace(/—/,"");
+    });
+    rows.push(cells);
+  });
+  const csv="\ufeff"+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(";")).join("\r\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download="IRIX_учебная_финмодель.csv"; a.click(); URL.revokeObjectURL(a.href);
+};
+
+buildTable(); update();
+</script>
+</body>
+</html>
