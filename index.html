@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IRIX PROFIT — фактическая финмодель 2026</title>
+<title>IRIX PROFIT — учебная финмодель</title>
 <style>
 :root{
   /* тёмно-золотая тема — по умолчанию */
@@ -62,8 +62,6 @@ header{position:sticky;top:0;z-index:40;background:var(--bg);background:color-mi
 .btn:focus-visible,.seg button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--chip);outline-offset:2px}
 
 main{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;padding:16px 20px 50px;align-items:start}
-#planWrap{grid-column:1/-1}
-#planWrap[hidden]{display:none}
 @media (max-width:1100px){main{grid-template-columns:minmax(0,1fr);padding:14px 12px 40px}}
 
 /* ---------- дашборд сбоку ---------- */
@@ -104,6 +102,8 @@ tbody tr:nth-child(even) th.c1,tbody tr:nth-child(even) td.c2,tbody tr:nth-child
 td{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
 tr.sec th,tr.sec td{background:var(--secBg)!important}
 tr.sec th.c1{color:var(--acc);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+tr.ssec th,tr.ssec td{background:var(--panel2)!important}
+tr.ssec th.c1{color:var(--acc2);font-size:10px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;padding-left:18px}
 tr.tot th.c1,tr.tot td{font-weight:700;background:var(--totBg)!important}
 tr.tot td{border-top:1px solid var(--acc2)}
 tr.pctrow td:not(.c2){color:var(--mute)}
@@ -117,47 +117,6 @@ th.c1.sub{padding-left:24px;color:var(--sub2)}
 .inp:hover{border-color:var(--chip)}
 .unit{font-size:10px;color:var(--mute);margin-left:3px}
 .chk{width:14px;height:14px;accent-color:var(--chip);vertical-align:-2px;margin-right:5px}
-/* лист плана */
-.sheet{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
-  margin-bottom:14px;overflow:hidden}
-.sheet h3{margin:0;padding:11px 14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--acc);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.sheet h3 .hint{font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--mute);font-weight:400}
-.pgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:12px 14px}
-@media (max-width:900px){.pgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:520px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.pcell{display:flex;flex-direction:column;gap:3px}
-.pcell label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
-.pcell input{width:100%;background:var(--inBg);border:1px solid var(--inLine);border-radius:6px;color:var(--inTx);
-  font-family:var(--mono);font-size:12.5px;text-align:right;padding:5px 7px}
-.pcell input:hover{border-color:var(--chip)}
-.pcell .d{font-size:10px;color:var(--mute);text-align:right;font-family:var(--mono);min-height:13px}
-.ptools{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 12px;align-items:center}
-.ptools .btn{font-size:11.5px;padding:5px 10px}
-.ptools .mini{width:66px;background:var(--inBg);border:1px solid var(--inLine);border-radius:6px;color:var(--inTx);
-  font-family:var(--mono);font-size:11.5px;text-align:right;padding:4px 6px}
-.ptools span{font-size:11.5px;color:var(--mute)}
-.ptot{padding:0 14px 14px;font-size:12px;color:var(--sub2)}
-.ptot b{font-family:var(--mono);color:var(--acc)}
-/* сворачивание секций */
-tr.sec th.c1{cursor:pointer;user-select:none}
-tr.sec th.c1 .tw-arrow{display:inline-block;width:12px;color:var(--acc2);font-size:9px;transition:transform .15s}
-tr.sec.collapsed th.c1 .tw-arrow{transform:rotate(-90deg)}
-tr.hidden{display:none}
-tr.sec td.c2{font-size:10px;color:var(--mute);letter-spacing:0;text-transform:none;font-weight:400}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:10px;margin-bottom:14px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
-.kpi .v{font-family:var(--mono);font-size:21px;font-weight:600;letter-spacing:-.03em;margin-top:5px}
-.kpi .s{font-size:11px;color:var(--mute);margin-top:2px}
-.kpi.hero{border-color:var(--heroLine);background:var(--heroBg);box-shadow:var(--heroGlow)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
-.card h2{margin:0;font-size:12.5px;letter-spacing:.03em;font-weight:600}
-.chead{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media (max-width:900px){.two{grid-template-columns:1fr}}
-svg .gl{stroke:var(--line)}
-svg .ax{fill:var(--mute);font-size:10px;font-family:var(--sans)}
-svg .vl{fill:var(--text);font-size:10px;font-family:var(--mono)}
 footer{padding:14px 20px 40px;color:var(--mute);font-size:11.5px;max-width:1020px}
 footer b{color:var(--text);font-weight:600}
 .legend{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 10px;font-size:11px;color:var(--mute);align-items:center}
@@ -171,8 +130,6 @@ footer b{color:var(--text);font-weight:600}
     --sub2:#333;--acc:#8a6d24;--acc2:#8a6d24;--eyebrow:#7a6224;--chip:#7A2ECC;--heroBg:#f6f4ee;--heroLine:#bbb;
     --heroGlow:none;--inBg:#fff;--inLine:#999;--inTx:#000}
   header,.noprint{display:none!important}
-  tr.hidden{display:none!important}
-  .sheet{page-break-inside:avoid}
   main{display:block;padding:0}
   aside{position:static;max-height:none;page-break-after:always;width:280px}
   .tw{overflow:visible}
@@ -190,22 +147,15 @@ footer b{color:var(--text);font-weight:600}
       </linearGradient></defs>
       <path d="M15,0 L140,0 L77.5,63 Z" fill="url(#g)"/>
       <path d="M0,15 L140,155 L96,155 L47.5,107.5 L0,155 Z" fill="url(#g)"/></svg>
-      <div><b>IRIX PROFIT</b><br><span>фактическая финмодель · ООО «Хеликспро» · 2026</span></div>
+      <div><b>IRIX PROFIT</b><br><span>учебная финмодель · ООО «Практикум», мебельное производство</span></div>
     </div>
     <div class="spacer"></div>
-    <div class="seg" role="group" aria-label="Лист">
-      <button id="vModel" aria-pressed="true">Модель</button>
-      <button id="vDash" aria-pressed="false">Дашборд</button>
-    </div>
     <div class="seg" role="group" aria-label="Режим расчёта">
       <button id="mFact" aria-pressed="true">Факт + модель</button>
       <button id="mModel" aria-pressed="false">Только модель</button>
-      <button id="mPlan" aria-pressed="false">План от выручки</button>
     </div>
-    <button class="btn" id="fold">Развернуть всё</button>
     <button class="btn" id="theme">Тема: тёмно-золотая</button>
     <button class="btn" id="reset">Вернуть факт</button>
-    <button class="btn" id="xls">Скачать Excel</button>
     <button class="btn" id="csv">Скачать CSV</button>
     <button class="btn" id="print">Печать</button>
   </div>
@@ -222,60 +172,34 @@ footer b{color:var(--text);font-weight:600}
   <div class="dfoot" id="dfoot"></div>
 </aside>
 
-<section id="planWrap" style="grid-column:1/-1" hidden>
-  <div class="sheet" id="planSheet" hidden>
-    <h3>Лист плана · выручка по месяцам, ₽
-      <span class="hint">введите суммы — вся модель пересчитается от них</span></h3>
-    <div class="pgrid" id="pgrid"></div>
-    <div class="ptools noprint">
-      <button class="btn" id="pFact">Заполнить фактом</button>
-      <button class="btn" id="pFlat">Размножить январь</button>
-      <span>рост к пред. месяцу</span>
-      <input class="mini" id="pGrow" type="number" step="1" value="5">
-      <span>%</span>
-      <button class="btn" id="pApply">Применить рост</button>
-      <button class="btn" id="pYear">Разбить годовую сумму</button>
-    </div>
-    <div class="ptot" id="ptot"></div>
-  </div>
-
-</section>
-
-<section id="viewDash" hidden>
-  <div class="kpis" id="kpis"></div>
-  <div class="card"><div class="chead"><h2>Выручка и чистая прибыль по месяцам</h2>
-    <span class="eyebrow" id="chartNote"></span></div>
-    <div id="chart1"></div></div>
-  <div class="two">
-    <div class="card"><div class="chead"><h2>Куда уходит рубль выручки</h2></div><div id="chart2"></div></div>
-    <div class="card"><div class="chead"><h2>Накопительная прибыль</h2></div><div id="chart3"></div></div>
-  </div>
-</section>
-
-<section id="viewModel">
+<section>
   <div class="legend noprint">
     <span><i class="lg-in"></i>ячейки ввода — параметры модели</span>
     <span><i class="lg-md"></i>месяцы, посчитанные моделью</span>
   </div>
   <div class="tw"><table id="tbl"><thead></thead><tbody></tbody></table></div>
   <footer>
-    <p><b>Как читать.</b> Столбец «Параметр» — это драйверы модели: проценты от выручки для производства и рубли в месяц для постоянных расходов. Меняете параметр — пересчитываются модельные месяцы и дашборд. Янв–июн — факт из ОПиУ 1С, июль — выручка факт, расходы по модели, авг–дек — прогноз от июля на заданный темп роста.</p>
-    <p><b>Субподряд.</b> 19 881 732 ₽ за 6 месяцев взяты из комбо-ОПиУ (источник — ДДС). В ОПиУ 1С отдельной статьи субподряда нет: если монтажные бригады уже сидят внутри «Себестоимости продаж», сумма задвоена — снимите галочку в строке субподряда и сравните.</p>
-    <p><b>Что не считается.</b> НДС, прочие доходы и расходы, личные расходы предпринимателя исключены — модель показывает операционный результат.</p>
+    <p><b>Учебный пример.</b> Данные вымышленные: мебельное производство, 5 товарных групп, 6 сотрудников АУП. Цифры подобраны так, чтобы структура затрат была узнаваемой — материалы 35 % выручки, зарплата производства 12 %, аренда и АУП в постоянных, — а арифметика легко проверялась вручную.</p>
+    <p><b>Группировка расходов.</b> Статьи разделены по поведению при изменении объёма. <b>Переменные</b> считаются в процентах от выручки: производственные (материалы, вспомогательные, сдельная зарплата цеха, аренда спецтехники под заказ, субподряд) и коммерческие (дилерская комиссия, оплата перевозчикам, премии менеджерам от продаж). <b>Постоянные</b> задаются в рублях в месяц и делятся на производственные (аренда цеха и склада, коммуналка, ремонт и содержание оборудования), административные (связь, ПО, банк, бухгалтерия, ЗП АУП, прочие) и коммерческие (реклама и маркетинг). Ремонт оборудования переведён из прямых в постоянные: по факту он не следует за объёмом, а зависит от графика обслуживания. Аренда спецтехники, наоборот, оставлена переменной — её берут под конкретные заказы.</p>
+    <p><b>Две прибыли.</b> Валовая прибыль = выручка − переменные производственные: показывает, сколько зарабатывает само производство. Маржинальный доход = выручка − все переменные, включая коммерческие: это то, из чего покрываются постоянные расходы. Точка безубыточности = (постоянные + проценты и амортизация) ÷ коэффициент маржинального дохода, поэтому она считается именно от МД, а не от валовой прибыли. Операционный рычаг = МД ÷ EBITDA: во столько раз прибыль реагирует на изменение выручки.</p>
+    <p><b>Как читать.</b> Столбец «Параметр» — драйверы модели: проценты от выручки для переменных и рубли в месяц для постоянных. Меняете параметр — пересчитываются модельные месяцы и дашборд. Янв–июн — «факт», июль — выручка факт, расходы по модели, авг–дек — прогноз от июля на заданный темп роста.</p>
+    <p><b>Что попробовать на занятии.</b> 1) Поднимите материалы с 35 % до 40 % — коэффициент МД падает, точка безубыточности растёт. 2) Увеличьте рекламу на 100 000 ₽ и сравните эффект с тем же ростом переменной статьи: постоянная сдвигает ТБУ на фиксированную сумму, переменная — меняет наклон. 3) Снимите галочку субподряда и объясните, почему сумма постоянных не изменилась. 4) Задайте темп роста выручки 5 % в месяц и посмотрите на операционный рычаг: чем он выше, тем сильнее прибыль реагирует на выручку.</p>
   </footer>
 </section>
 </main>
 
 <script>
-const DATA = {"months":["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"],"factN":6,"groups":[{"name":"Сваи винтовые (СВСН, СВЛ)","v":[2769524.26,4339123.36,4320973.79,5125984.46,11626484.79,11829377.84,10167875.56],"q":[540,1259,1375,2495,4481,5898,5252]},{"name":"Монтажные работы","v":[1856242.7,1556311.31,2219564.49,1812492.97,4343932.26,4344967.45,4124225.18],"q":[1860,604,1626.5,935,1313,1363,2200]},{"name":"Аренда техники и логистика","v":[743188.45,1269369.69,1238914.34,680707.23,1994459.82,1883186,1482766.43],"q":[30,55,62,50,92,85,108]},{"name":"Комплектующие (оголовки, удлинители, наконечники)","v":[297789.09,380588.84,380526.78,475124.77,1441997.39,1020172.11,1483222.43],"q":[522,806,1303,1679,4056,4387,5226]},{"name":"Металлопрокат и прочие материалы","v":[48200,0,624699.1,86279.57,60942.94,10000,343596.4],"q":[357,0,695,549.04,262,64,327.51]}],"direct":[["Материалы (себестоимость продаж)",[1601630.13,2914993.39,3999854.23,3832344.77,7829603.86,8902592.69]],["Вспомогательные и расходные материалы",[307208.21,154334.68,92915.8,334987.3,222811.51,651844.93]],["Зарплата производственного персонала",[460110,537110,715500,857000,970000,960000]],["Ремонт и содержание оборудования",[35500,0,0,0,166700,457000]],["Аренда спецтехники",[290000,288000,156500,25000,55000,131000]],["Комиссия партнёру (по ОПиУ)",[0,28570,170950,105850,40000,53500]],["Доставка (оплата поставщикам)",[0,0,52500,44700,63000,161500]],["Премии менеджерам",[23129,20036,90532,45472,40009,74001.64]]],"subTotal":19881732,"fixed":[["Аренда площади",[410000,210000,210000,0,0,210000]],["Аренда территории с навесом",[380000,190000,190000,190000,190000,195000]],["Связь и интернет",[0,0,9000,4300,0,0]],["Сервер 1С",[0,0,16000,9000,0,50000]],["Программное обеспечение и лицензии",[0,0,35000,0,240660,0]],["Домен и хостинг",[0,0,19300,0,0,0]],["Услуги банка",[95893.86,28367.15,9015.66,64047.53,23919.54,14804.32]],["Реклама, маркетинг и сайт",[251000,0,10000,0,149000,310000]],["Юридические услуги",[0,14000,0,0,0,0]],["Прочие управленческие расходы",[42978.88,89935.88,55072.26,50024.3,43656.8,96903.61]],["Прочие постоянные (мусор, документы, разовые)",[0,0,17300,0,14000,35000]]],"utilities":[55000,82500,62300,62800,57000,73500],"salary":[["Акамова Елена",[45000,45000,45000,80000,80000,80000]],["Бабенко Сергей",[0,0,0,32727,80000,80000]],["Кислицина Лариса Валерьевна",[90000,90435,90435,90000,90435,90435]],["Космынина Валерия Андреевна",[100000,100000,100000,100000,0,0]],["Мирошниченко Виктор Викторович",[30450,30450,30450,30450,30450,30450]],["Романова Ирина Николаевна",[45000,45000,45000,45000,45000,45000]],["Токарева Виктория Викторовна",[50000,50000,50000,50000,50000,50000]],["Фриев Руслан Казбекович",[30450,30450,30450,30450,30450,30450]],["Фриева Наталья Викторовна",[26100,26100,26100,26100,26100,26100]]],"fin":[["Проценты по кредитам",[39526.02,34750.96,29973.91,32608.97,61745.36,34059.2]],["Амортизация",[23383.33,23383.33,23383.33,23383.33,23383.33,23383.33]]]};
+const DATA = {"months": ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"], "factN": 6, "groups": [{"name": "Шкафы-купе", "v": [1176000.0, 1085280.0, 1247400.0, 1470560.0, 1730400.0, 1856400.0, 1688960.0], "q": [42.0, 38.0, 45.0, 52.0, 60.0, 65.0, 58.0]}, {"name": "Кухонные гарнитуры", "v": [780000.0, 637000.0, 919100.0, 1060800.0, 1300000.0, 1472900.0, 1193400.0], "q": [12.0, 10.0, 14.0, 16.0, 20.0, 22.0, 18.0]}, {"name": "Столы и стулья", "v": [765000.0, 636300.0, 855000.0, 980100.0, 1193400.0, 1272600.0, 1112400.0], "q": [85.0, 70.0, 95.0, 110.0, 130.0, 140.0, 120.0]}, {"name": "Комплектующие и фурнитура", "v": [720000.0, 624000.0, 824160.0, 929200.0, 1071200.0, 1142400.0, 1020000.0], "q": [900.0, 780.0, 1010.0, 1150.0, 1300.0, 1400.0, 1250.0]}, {"name": "Доставка и сборка", "v": [247500.0, 216000.0, 270000.0, 321300.0, 376380.0, 407880.0, 352260.0], "q": [55.0, 48.0, 60.0, 70.0, 82.0, 88.0, 76.0]}], "direct": [["Материалы (сырьё, плиты, фурнитура)", [1329704.25, 1108307.97, 1454885.81, 1616685.42, 2024682.66, 2110197.74]], ["Вспомогательные и расходные материалы", [66393.0, 70368.76, 82313.2, 100001.16, 107756.22, 123043.6]], ["Зарплата производственного персонала", [464751.0, 391506.19, 484001.62, 571435.2, 660148.63, 730878.98]], ["Аренда спецтехники и оснастки", [55327.5, 38382.96, 74081.88, 71429.4, 93577.77, 83054.43]], ["Комиссия партнёру (дилерские)", [25819.5, 31985.8, 45272.26, 57143.52, 56713.8, 61521.8]], ["Доставка (оплата перевозчикам)", [49794.75, 47978.7, 64821.64, 71429.4, 93577.77, 87668.56]], ["Премии менеджерам", [59016.0, 57574.44, 82313.2, 104763.12, 130441.74, 129195.78]]], "subTotal": 2207060.8, "fixed": [["Аренда производственного помещения", [250000, 250000, 250000, 250000, 250000, 250000]], ["Аренда склада", [120000, 120000, 120000, 120000, 120000, 120000]], ["Ремонт и содержание оборудования", [14754.0, 57574.44, 24693.96, 57143.52, 51042.42, 67673.98]], ["Связь и интернет", [12000, 12000, 12000, 12000, 12000, 12000]], ["Сервер 1С и хостинг", [9000, 9000, 9000, 9000, 9000, 9000]], ["Программное обеспечение и лицензии", [0, 0, 54000, 0, 0, 54000]], ["Домен и сайт", [0, 0, 24000, 0, 0, 0]], ["Услуги банка", [14200, 15800, 16400, 15100, 17300, 16900]], ["Бухгалтерские и юридические услуги", [20000, 20000, 20000, 20000, 20000, 20000]], ["Прочие управленческие расходы", [33500, 36200, 34800, 38100, 35400, 37000]], ["Прочие постоянные (хозрасходы)", [9400, 10600, 10100, 11200, 9800, 10500]], ["Реклама и маркетинг", [60000, 80000, 90000, 110000, 120000, 100000]]], "utilities": [62160.0, 59940.0, 55500.0, 51060.0, 48840.0, 49950.0], "salary": [["Директор", [120000, 120000, 120000, 120000, 120000, 120000]], ["Главный бухгалтер", [90000, 90000, 90000, 90000, 90000, 90000]], ["Финансовый менеджер", [0, 0, 0, 70000, 70000, 70000]], ["Менеджер по продажам", [60000, 60000, 60000, 65000, 65000, 65000]], ["Специалист по закупкам", [55000, 55000, 55000, 55000, 60000, 60000]], ["Офис-менеджер", [40000, 40000, 40000, 40000, 40000, 40000]]], "fin": [["Проценты по кредиту", [30000, 29000, 28000, 26500, 25000, 23500]], ["Амортизация", [40000, 40000, 40000, 40000, 40000, 40000]]], "varProdN": 4, "fixProdN": 3, "fixAdmN": 8};
 const M=DATA.months, N=12, F=DATA.factN;
+const PN=DATA.varProdN, FP=DATA.fixProdN, FA=DATA.fixAdmN;
 const sum=a=>a.reduce((x,y)=>x+(+y||0),0);
 const rub=v=>(v==null||!isFinite(v))?"—":(Math.round(v)===0?"—":new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(Math.round(v)));
 const pc=v=>!isFinite(v)?"—":new Intl.NumberFormat("ru-RU",{minimumFractionDigits:1,maximumFractionDigits:1}).format(v*100)+"%";
+const ratio=v=>!isFinite(v)?"—":new Intl.NumberFormat("ru-RU",{minimumFractionDigits:1,maximumFractionDigits:1}).format(v)+"×";
 
 const revF=i=>sum(DATA.groups.map(g=>g.v[i]||0));
 const rev6=sum([0,1,2,3,4,5].map(revF));
-const SUBN="Субподряд, монтажные бригады";
+const SUBN="Субподряд (сторонние бригады)";
 const base={};
 DATA.direct.forEach(([n,v])=>base["p:"+n]=sum(v)/rev6*100);
 base["p:"+SUBN]=DATA.subTotal/rev6*100;
@@ -287,47 +211,51 @@ base.growth=0;
 const D=Object.assign({},base);
 let subOn=true, mode="fact", mon=5;
 
-/* структура выручки по группам и средний чек — берём из факта, нужны для режима плана */
-const shareG=DATA.groups.map(g=>sum(g.v.slice(0,6))/rev6);
-const chkG=DATA.groups.map(g=>{const v=sum(g.v.slice(0,6)),q=sum(g.q.slice(0,6));return q?v/q:0;});
-/* план выручки: по умолчанию — факт, дальше повтор последнего известного месяца */
-const plan=[];
-for(let i=0;i<N;i++) plan.push(Math.round(i<7?revF(i):revF(6)));
-
 /* ---------- расчёт ---------- */
 function calc(){
-  const r={rev:[],direct:[],sub:[],gross:[],fix:[],fin:[],ebitda:[],np:[],bep:[],
+  const r={rev:[],varP:[],varC:[],varTot:[],sub:[],gross:[],cm:[],
+           fixP:[],fixA:[],fixC:[],fix:[],fin:[],ebitda:[],np:[],bep:[],saf:[],lev:[],
            dir:[],fx:[],sal:[],fn:[],grp:[],qty:[],chk:[],util:[]};
   DATA.direct.forEach(()=>r.dir.push([])); DATA.fixed.forEach(()=>r.fx.push([]));
   DATA.salary.forEach(()=>r.sal.push([])); DATA.fin.forEach(()=>r.fn.push([]));
   DATA.groups.forEach(()=>{r.grp.push([]);r.qty.push([]);r.chk.push([]);});
   for(let i=0;i<N;i++){
     const isFact=(mode==="fact"&&i<F);
-    let rev = mode==="plan" ? plan[i] : (i<7 ? revF(i) : r.rev[i-1]*(1+D.growth/100));
+    let rev = i<7 ? revF(i) : r.rev[i-1]*(1+D.growth/100);
     r.rev.push(rev);
     DATA.groups.forEach((g,k)=>{
-      let v,q;
-      if(mode==="plan"){ v=rev*shareG[k]; q=chkG[k]?v/chkG[k]:0; }
-      else if(i<7){ v=g.v[i]; q=g.q[i]; }
-      else { v=r.grp[k][i-1]*(1+D.growth/100); q=r.qty[k][i-1]*(1+D.growth/100); }
+      const v=i<7?g.v[i]:r.grp[k][i-1]*(1+D.growth/100);
+      const q=i<7?g.q[i]:r.qty[k][i-1]*(1+D.growth/100);
       r.grp[k].push(v); r.qty[k].push(q); r.chk[k].push(q?v/q:0);
     });
-    let dir=0;
-    DATA.direct.forEach(([n,v],k)=>{const x=isFact?v[i]:rev*D["p:"+n]/100; r.dir[k].push(x); dir+=x;});
+    /* переменные: производственные (0..PN-1) + субподряд, коммерческие (PN..) */
+    let vp=0,vc=0;
+    DATA.direct.forEach(([n,v],k)=>{const x=isFact?v[i]:rev*D["p:"+n]/100; r.dir[k].push(x);
+      if(k<PN) vp+=x; else vc+=x;});
     const sb=subOn?rev*D["p:"+SUBN]/100:0;
-    r.sub.push(sb); r.direct.push(dir+sb); r.gross.push(rev-dir-sb);
-    let fx=0,rent=0;
-    DATA.fixed.forEach(([n,v],k)=>{const x=isFact?v[i]:D["f:"+n]; r.fx[k].push(x); fx+=x; if(k<2)rent+=x;});
-    const u=isFact?DATA.utilities[i]:rent*D.util/100; r.util.push(u); fx+=u;
+    r.sub.push(sb); vp+=sb;
+    r.varP.push(vp); r.varC.push(vc); r.varTot.push(vp+vc);
+    r.gross.push(rev-vp);          // валовая прибыль = выручка − переменные производственные
+    r.cm.push(rev-vp-vc);          // маржинальный доход = выручка − все переменные
+    /* постоянные: производственные (0..FP-1)+коммуналка, административные (FP..FP+FA-1)+ЗП АУП, коммерческие */
+    let fp=0,fa=0,fc=0,rent=0;
+    DATA.fixed.forEach(([n,v],k)=>{const x=isFact?v[i]:D["f:"+n]; r.fx[k].push(x);
+      if(k<FP){fp+=x; if(k<2)rent+=x;} else if(k<FP+FA) fa+=x; else fc+=x;});
+    const u=isFact?DATA.utilities[i]:rent*D.util/100; r.util.push(u); fp+=u;
     let sal=0;
     DATA.salary.forEach(([n,v],k)=>{const x=isFact?v[i]:D["z:"+n]; r.sal[k].push(x); sal+=x;});
-    fx+=sal; r.fix.push(fx);
+    fa+=sal;
+    r.fixP.push(fp); r.fixA.push(fa); r.fixC.push(fc);
+    const fx=fp+fa+fc; r.fix.push(fx);
     let fin=0;
     DATA.fin.forEach(([n,v],k)=>{const x=isFact?v[i]:D["o:"+n]; r.fn[k].push(x); fin+=x;});
     r.fin.push(fin);
-    const eb=r.gross[i]-fx; r.ebitda.push(eb); r.np.push(eb-fin);
-    const mg=rev?r.gross[i]/rev:0;
-    r.bep.push(mg>0?(fx+fin)/mg:NaN);
+    const eb=r.cm[i]-fx; r.ebitda.push(eb); r.np.push(eb-fin);
+    const km=rev?r.cm[i]/rev:0;    // коэффициент маржинального дохода
+    const bep=km>0?(fx+fin)/km:NaN;
+    r.bep.push(bep);
+    r.saf.push(rev?(rev-bep)/rev:NaN);
+    r.lev.push(eb>0?r.cm[i]/eb:NaN);
   }
   r.salTot=r.rev.map((_,i)=>sum(r.sal.map(x=>x[i])));
   return r;
@@ -336,22 +264,28 @@ function calc(){
 /* ---------- дашборд ---------- */
 function renderDash(r){
   const acc=k=>sum(r[k].slice(0,mon+1));
-  const mv={rev:r.rev[mon],dir:r.direct[mon],gross:r.gross[mon],fix:r.fix[mon],
+  const mv={rev:r.rev[mon],vr:r.varTot[mon],gross:r.gross[mon],cm:r.cm[mon],fix:r.fix[mon],
+            fixP:r.fixP[mon],fixA:r.fixA[mon],fixC:r.fixC[mon],
             fin:r.fin[mon],eb:r.ebitda[mon],np:r.np[mon]};
-  const av={rev:acc("rev"),dir:acc("direct"),gross:acc("gross"),fix:acc("fix"),
+  const av={rev:acc("rev"),vr:acc("varTot"),gross:acc("gross"),cm:acc("cm"),fix:acc("fix"),
+            fixP:acc("fixP"),fixA:acc("fixA"),fixC:acc("fixC"),
             fin:acc("fin"),eb:acc("ebitda"),np:acc("np")};
-  const bepM=mv.gross>0?(mv.fix+mv.fin)/(mv.gross/mv.rev):NaN;
-  const bepA=av.gross>0?(av.fix+av.fin)/(av.gross/av.rev):NaN;
+  const bepM=mv.cm>0?(mv.fix+mv.fin)/(mv.cm/mv.rev):NaN;
+  const bepA=av.cm>0?(av.fix+av.fin)/(av.cm/av.rev):NaN;
   const row=(n,a,b,cls)=>'<div class="drow '+(cls||"")+'"><span class="n">'+n+'</span>'+
       '<span class="a">'+a+'</span><span class="b">'+b+'</span></div>';
   const sign=v=>'<span class="'+(v<0?"neg":"pos")+'">'+rub(v)+'</span>';
   document.getElementById("dash").innerHTML=
     row("Выручка",rub(mv.rev),rub(av.rev),"big")+
-    row("Прямые затраты",rub(mv.dir),rub(av.dir))+
-    row("Доля прямых в выручке",pc(mv.dir/mv.rev),pc(av.dir/av.rev),"rel")+
+    row("Переменные расходы",rub(mv.vr),rub(av.vr))+
+    row("Доля переменных",pc(mv.vr/mv.rev),pc(av.vr/av.rev),"rel")+
     row("Валовая прибыль",rub(mv.gross),rub(av.gross))+
-    row("Маржинальность",pc(mv.gross/mv.rev),pc(av.gross/av.rev),"rel")+
+    row("Маржинальный доход",rub(mv.cm),rub(av.cm))+
+    row("Коэффициент МД",pc(mv.cm/mv.rev),pc(av.cm/av.rev),"rel")+
     row("Постоянные расходы",rub(mv.fix),rub(av.fix))+
+    row("· производственные",rub(mv.fixP),rub(av.fixP))+
+    row("· административные",rub(mv.fixA),rub(av.fixA))+
+    row("· коммерческие",rub(mv.fixC),rub(av.fixC))+
     row("Доля постоянных",pc(mv.fix/mv.rev),pc(av.fix/av.rev),"rel")+
     row("EBITDA",sign(mv.eb),rub(av.eb))+
     row("Рентабельность EBITDA",pc(mv.eb/mv.rev),pc(av.eb/av.rev),"rel")+
@@ -359,48 +293,65 @@ function renderDash(r){
     row("Чистая прибыль",sign(mv.np),rub(av.np),"big")+
     row("Рентабельность чистой",pc(mv.np/mv.rev),pc(av.np/av.rev),"rel")+
     row("Точка безубыточности",rub(bepM),rub(bepA))+
-    row("Запас прочности",pc((mv.rev-bepM)/mv.rev),pc((av.rev-bepA)/av.rev),"rel");
+    row("Запас прочности",pc((mv.rev-bepM)/mv.rev),pc((av.rev-bepA)/av.rev),"rel")+
+    row("Операционный рычаг",ratio(mv.eb>0?mv.cm/mv.eb:NaN),ratio(av.eb>0?av.cm/av.eb:NaN),"rel");
   document.getElementById("dfoot").textContent=
-    (mode==="plan" ? "Выручка взята из листа плана, расходы посчитаны параметрами. "
-      : mode==="fact"&&mon<F ? "Выбран фактический месяц. " : "Выбранный месяц посчитан моделью. ")+
+    (mode==="fact"&&mon<F ? "Выбран фактический месяц. " : "Выбранный месяц посчитан моделью. ")+
     "Накопительно — с января по "+M[mon]+" включительно.";
 }
 
 /* ---------- таблица ---------- */
 let ROWS=[], built=false;
+const bepTot=r=>(sum(r.fix)+sum(r.fin))/(sum(r.cm)/sum(r.rev));
 function defRows(){
   const R=[];
-  let si=-1;
-  const sec=(t,fold)=>{si++; R.push({sec:t,si:si,fold:!!fold});};
-  const mark=o=>{o.si=si; return o;};
-  sec("Выручка",1);
+  const sec=t=>R.push({sec:t});
+  const ssec=t=>R.push({ssec:t});
+  sec("Выручка");
   DATA.groups.forEach((g,k)=>R.push({n:g.name,sub:1,get:r=>r.grp[k]}));
   R.push({n:"Выручка, всего",tot:1,get:r=>r.rev,key:"growth",unit:"%",
           hint:"рост к пред. месяцу, авг–дек"});
-  sec("Средний чек, ₽ за единицу",1);
+  sec("Средний чек, ₽ за единицу");
   DATA.groups.forEach((g,k)=>R.push({n:g.name,sub:1,get:r=>r.chk[k]}));
-  sec("Прямые (производственные) затраты · % от выручки",1);
-  DATA.direct.forEach(([n],k)=>R.push({n:n,sub:1,key:"p:"+n,unit:"%",get:r=>r.dir[k]}));
+  sec("Переменные расходы · % от выручки");
+  ssec("Производственные переменные");
+  DATA.direct.forEach(([n],k)=>{ if(k<PN) R.push({n:n,sub:1,key:"p:"+n,unit:"%",get:r=>r.dir[k]}); });
   R.push({n:SUBN,sub:1,key:"p:"+SUBN,unit:"%",chk:1,get:r=>r.sub});
-  R.push({n:"Итого прямые затраты",tot:1,get:r=>r.direct});
-  R.push({n:"Доля прямых затрат в выручке",pct:1,get:r=>r.direct.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.direct)/sum(r.rev)});
-  sec("Валовая прибыль");
+  R.push({n:"Итого переменные производственные",tot:1,get:r=>r.varP});
   R.push({n:"Валовая прибыль",tot:1,get:r=>r.gross});
-  R.push({n:"Маржинальность",pct:1,get:r=>r.gross.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.gross)/sum(r.rev)});
-  sec("Постоянные расходы · ₽ в месяц",1);
-  DATA.fixed.forEach(([n],k)=>R.push({n:n,sub:1,key:"f:"+n,unit:"₽",get:r=>r.fx[k]}));
+  R.push({n:"Валовая маржа",pct:1,get:r=>r.gross.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.gross)/sum(r.rev)});
+  ssec("Коммерческие переменные");
+  DATA.direct.forEach(([n],k)=>{ if(k>=PN) R.push({n:n,sub:1,key:"p:"+n,unit:"%",get:r=>r.dir[k]}); });
+  R.push({n:"Итого переменные коммерческие",tot:1,get:r=>r.varC});
+  sec("Маржинальный доход");
+  R.push({n:"Итого переменные расходы",tot:1,get:r=>r.varTot});
+  R.push({n:"Доля переменных в выручке",pct:1,get:r=>r.varTot.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.varTot)/sum(r.rev)});
+  R.push({n:"Маржинальный доход",tot:1,get:r=>r.cm});
+  R.push({n:"Коэффициент маржинального дохода",pct:1,get:r=>r.cm.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.cm)/sum(r.rev)});
+  sec("Постоянные расходы · ₽ в месяц");
+  ssec("Производственные постоянные");
+  DATA.fixed.forEach(([n],k)=>{ if(k<FP) R.push({n:n,sub:1,key:"f:"+n,unit:"₽",get:r=>r.fx[k]}); });
   R.push({n:"Коммунальные услуги",sub:1,key:"util",unit:"%",hint:"от аренды",get:r=>r.util});
+  R.push({n:"Итого постоянные производственные",tot:1,get:r=>r.fixP});
+  ssec("Административные постоянные");
+  DATA.fixed.forEach(([n],k)=>{ if(k>=FP&&k<FP+FA) R.push({n:n,sub:1,key:"f:"+n,unit:"₽",get:r=>r.fx[k]}); });
   DATA.salary.forEach(([n],k)=>R.push({n:"ЗП АУП · "+n,sub:1,key:"z:"+n,unit:"₽",get:r=>r.sal[k]}));
   R.push({n:"Итого ЗП АУП",tot:1,get:r=>r.salTot});
+  R.push({n:"Итого постоянные административные",tot:1,get:r=>r.fixA});
+  ssec("Коммерческие постоянные");
+  DATA.fixed.forEach(([n],k)=>{ if(k>=FP+FA) R.push({n:n,sub:1,key:"f:"+n,unit:"₽",get:r=>r.fx[k]}); });
   R.push({n:"Итого постоянные расходы",tot:1,get:r=>r.fix});
-  sec("Результат",1);
+  R.push({n:"Доля постоянных в выручке",pct:1,get:r=>r.fix.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.fix)/sum(r.rev)});
+  sec("Результат");
   R.push({n:"EBITDA",tot:1,get:r=>r.ebitda});
+  R.push({n:"Рентабельность по EBITDA",pct:1,get:r=>r.ebitda.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.ebitda)/sum(r.rev)});
   DATA.fin.forEach(([n],k)=>R.push({n:n,sub:1,key:"o:"+n,unit:"₽",get:r=>r.fn[k]}));
   R.push({n:"Чистая прибыль",tot:1,get:r=>r.np});
   R.push({n:"Рентабельность по чистой прибыли",pct:1,get:r=>r.np.map((v,i)=>v/r.rev[i]),totv:r=>sum(r.np)/sum(r.rev)});
-  R.push({n:"Точка безубыточности",get:r=>r.bep,totv:r=>(sum(r.fix)+sum(r.fin))/(sum(r.gross)/sum(r.rev))});
-  let cur=-1;
-  R.forEach(o=>{ if(o.sec!==undefined) cur=o.si; else o.si=cur; });
+  R.push({n:"Точка безубыточности",get:r=>r.bep,totv:bepTot});
+  R.push({n:"Запас прочности",pct:1,get:r=>r.saf,totv:r=>(sum(r.rev)-bepTot(r))/sum(r.rev)});
+  R.push({n:"Операционный рычаг",rat:1,get:r=>r.lev,
+          totv:r=>sum(r.ebitda)>0?sum(r.cm)/sum(r.ebitda):NaN});
   return R;
 }
 function buildTable(){
@@ -411,13 +362,11 @@ function buildTable(){
   const tb=document.querySelector("#tbl tbody"); tb.innerHTML="";
   ROWS.forEach(rw=>{
     const tr=document.createElement("tr");
-    if(rw.sec){
-      tr.className="sec";
-      tr.innerHTML='<th class="c1"><span class="tw-arrow">\u25BC</span> '+rw.sec+'</th>'+
-        '<td class="c2"></td>'+M.map(()=>'<td></td>').join("")+'<td class="tcol"></td>';
-      tb.appendChild(tr); rw.tr=tr;
-      tr.querySelector("th.c1").addEventListener("click",()=>toggleSec(rw.si));
-      return;
+    if(rw.sec||rw.ssec){
+      tr.className=rw.sec?"sec":"ssec";
+      tr.innerHTML='<th class="c1">'+(rw.sec||rw.ssec)+'</th><td class="c2"></td>'+
+        M.map(()=>'<td></td>').join("")+'<td class="tcol"></td>';
+      tb.appendChild(tr); rw.tr=tr; return;
     }
     tr.className=(rw.tot?"tot ":"")+(rw.pct?"pctrow":"");
     let param="";
@@ -438,7 +387,6 @@ function buildTable(){
   });
   const sw=document.getElementById("subOn");
   if(sw) sw.addEventListener("change",e=>{subOn=e.target.checked; update();});
-  ROWS.forEach(rw=>{ if(rw.sec!==undefined&&rw.fold) folded[rw.si]=true; });
   built=true;
 }
 function update(){
@@ -447,146 +395,19 @@ function update(){
     th.classList.toggle("col-model",!(mode==="fact"&&i<F));
   });
   ROWS.forEach(rw=>{
-    if(rw.sec) return;
+    if(rw.sec||rw.ssec) return;
+    const f=rw.pct?pc:(rw.rat?ratio:rub);
     const v=rw.get(r), tds=rw.tr.querySelectorAll("td");
     for(let i=0;i<N;i++){
       const td=tds[i+1];
-      td.textContent=rw.pct?pc(v[i]):rub(v[i]);
+      td.textContent=f(v[i]);
       td.classList.toggle("col-model",!(mode==="fact"&&i<F));
-      if(!rw.pct&&v[i]<0) td.classList.add("neg"); else td.classList.remove("neg");
+      if(!rw.pct&&!rw.rat&&v[i]<0) td.classList.add("neg"); else td.classList.remove("neg");
     }
-    tds[N+1].textContent=rw.totv?(rw.pct?pc(rw.totv(r)):rub(rw.totv(r))):(rw.pct?pc(sum(v)/N):rub(sum(v)));
+    tds[N+1].textContent=rw.totv?f(rw.totv(r)):(rw.pct?pc(sum(v)/N):rub(sum(v)));
   });
-  const gi=document.querySelector('#tbl .inp[data-k="growth"]');
-  if(gi){
-    gi.disabled=(mode==="plan");
-    gi.style.opacity=(mode==="plan")?.35:1;
-    gi.title=(mode==="plan")?"В режиме плана выручка берётся с листа плана":"рост к пред. месяцу, авг–дек";
-  }
-  renderDash(r); renderDashSheet(r); fitSticky();
+  renderDash(r); fitSticky();
   window._last=r;
-}
-
-const folded={};
-function applyFold(){
-  ROWS.forEach(rw=>{
-    if(rw.sec!==undefined){
-      rw.tr.classList.toggle("collapsed",!!folded[rw.si]);
-      const n=ROWS.filter(x=>x.sec===undefined&&x.si===rw.si&&x.sub).length;
-      rw.tr.querySelector("td.c2").textContent=folded[rw.si]&&n?"+"+n+" стр.":"";
-    } else if(rw.sub){
-      rw.tr.classList.toggle("hidden",!!folded[rw.si]);
-    }
-  });
-  const anyOpen=ROWS.some(rw=>rw.sec!==undefined&&rw.fold&&!folded[rw.si]);
-  const b=document.getElementById("fold");
-  if(b) b.textContent=anyOpen?"Свернуть всё":"Развернуть всё";
-  fitSticky();
-}
-function toggleSec(si){ folded[si]=!folded[si]; applyFold(); }
-
-
-/* ---------- лист «Дашборд»: KPI и графики ---------- */
-const NS="http://www.w3.org/2000/svg";
-function svg(w,h){return '<svg viewBox="0 0 '+w+' '+h+'" width="100%" height="'+h+'" xmlns="'+NS+'" style="display:block">';}
-function short(v){
-  const a=Math.abs(v);
-  if(a>=1e6) return (v/1e6).toFixed(1).replace(".",",")+" млн";
-  if(a>=1e3) return Math.round(v/1e3)+" тыс";
-  return Math.round(v)+"";
-}
-function kpiCard(l,v,s,cls){
-  return '<div class="kpi '+(cls||"")+'"><div class="eyebrow">'+l+'</div>'+
-         '<div class="v num">'+v+'</div><div class="s">'+s+'</div></div>';
-}
-function renderDashSheet(r){
-  const T={rev:sum(r.rev),dir:sum(r.direct),gross:sum(r.gross),fix:sum(r.fix),
-           fin:sum(r.fin),eb:sum(r.ebitda),np:sum(r.np),sub:sum(r.sub)};
-  const marg=T.gross/T.rev, bep=T.gross>0?(T.fix+T.fin)/(T.gross/T.rev):NaN;
-  document.getElementById("kpis").innerHTML=
-    kpiCard("Выручка, 12 мес",rub(T.rev),(mode==="plan"?"по листу плана":"факт + модель"),"hero")+
-    kpiCard("Маржинальность",pc(marg),"прямые "+pc(T.dir/T.rev)+" от выручки")+
-    kpiCard("EBITDA",rub(T.eb),pc(T.eb/T.rev)+" от выручки")+
-    kpiCard("Чистая прибыль",'<span class="'+(T.np<0?"neg":"pos")+'">'+rub(T.np)+'</span>',pc(T.np/T.rev)+" от выручки","hero")+
-    kpiCard("Точка безубыточности",rub(bep),"выручки за 12 мес")+
-    kpiCard("Запас прочности",pc((T.rev-bep)/T.rev),"до точки безубыточности");
-  document.getElementById("chartNote").textContent=
-    (mode==="fact"?"янв–июн факт · июл–дек модель":mode==="plan"?"все месяцы — из листа плана":"все месяцы по параметрам")+
-    " · столбцы — выручка, линия — чистая прибыль";
-
-  /* --- график 1: столбцы выручки + линия прибыли --- */
-  const W=980,H=250,L=54,R=16,Tp=14,B=30, iw=(W-L-R)/N;
-  const mx=Math.max(...r.rev,0)||1;
-  const lo=Math.min(0,...r.np), hi=Math.max(0,...r.np);
-  const y=v=>Tp+(H-Tp-B)*(1-v/mx);
-  const y2=v=>Tp+(H-Tp-B)*(1-(v-lo)/((hi-lo)||1));
-  let g=svg(W,H);
-  for(let k=0;k<=4;k++){
-    const yy=Tp+(H-Tp-B)*k/4, val=mx*(1-k/4);
-    g+='<line class="gl" x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke-width="1" opacity=".5"/>';
-    g+='<text class="ax" x="'+(L-6)+'" y="'+(yy+3)+'" text-anchor="end">'+short(val)+'</text>';
-  }
-  r.rev.forEach((v,i)=>{
-    const x=L+i*iw+iw*0.18, w=iw*0.64, yy=y(v);
-    const fact=(mode==="fact"&&i<F);
-    g+='<rect x="'+x+'" y="'+yy+'" width="'+w+'" height="'+Math.max(1,(H-B)-yy)+'" rx="2" '+
-       'fill="'+(fact?"var(--acc2)":"var(--chip)")+'" opacity="'+(fact?".9":".55")+'"/>';
-    g+='<text class="ax" x="'+(x+w/2)+'" y="'+(H-B+14)+'" text-anchor="middle">'+M[i]+'</text>';
-  });
-  let pts=r.np.map((v,i)=>(L+i*iw+iw/2)+","+y2(v)).join(" ");
-  g+='<polyline points="'+pts+'" fill="none" stroke="var(--acc)" stroke-width="2"/>';
-  r.np.forEach((v,i)=>{
-    g+='<circle cx="'+(L+i*iw+iw/2)+'" cy="'+y2(v)+'" r="3" fill="var(--acc)"/>';
-  });
-  g+="</svg>";
-  document.getElementById("chart1").innerHTML=g;
-
-  /* --- график 2: структура рубля выручки --- */
-  const W2=460,H2=210;
-  const parts=[["Прямые без субподряда",T.dir-T.sub,"var(--acc2)"],
-               ["Субподряд",T.sub,"var(--chip)"],
-               ["Постоянные расходы",T.fix,"var(--sub2)"],
-               ["Проценты и амортизация",T.fin,"var(--mute)"],
-               ["Чистая прибыль",Math.max(0,T.np),"var(--acc)"]].filter(p=>p[1]>0);
-  const tot2=parts.reduce((a,p)=>a+p[1],0)||1;
-  let g2=svg(W2,H2), xx=10, bw=W2-20;
-  parts.forEach(p=>{
-    const w=bw*p[1]/tot2;
-    g2+='<rect x="'+xx+'" y="12" width="'+Math.max(1,w)+'" height="26" fill="'+p[2]+'" opacity=".85"/>';
-    if(w>44) g2+='<text class="vl" x="'+(xx+w/2)+'" y="29" text-anchor="middle" fill="#0D0B08">'+pc(p[1]/tot2)+'</text>';
-    xx+=w;
-  });
-  parts.forEach((p,i)=>{
-    const yy=58+i*29;
-    g2+='<rect x="10" y="'+(yy-9)+'" width="11" height="11" rx="2" fill="'+p[2]+'" opacity=".85"/>';
-    g2+='<text class="ax" x="28" y="'+yy+'">'+p[0]+'</text>';
-    g2+='<text class="vl" x="'+(W2-10)+'" y="'+yy+'" text-anchor="end">'+rub(p[1])+' · '+pc(p[1]/tot2)+'</text>';
-  });
-  g2+="</svg>";
-  document.getElementById("chart2").innerHTML=g2;
-
-  /* --- график 3: накопительная прибыль --- */
-  const W3=460,H3=210,L3=52,B3=22,T3=20;
-  let acc=0; const cum=r.np.map(v=>acc+=v);
-  const lo3=Math.min(0,...cum), hi3=Math.max(0,...cum);
-  const y3=v=>T3+(H3-T3-B3)*(1-(v-lo3)/((hi3-lo3)||1));
-  let g3=svg(W3,H3);
-  for(let k=0;k<=3;k++){
-    const val=lo3+(hi3-lo3)*k/3, yy=y3(val);
-    g3+='<line class="gl" x1="'+L3+'" y1="'+yy+'" x2="'+(W3-10)+'" y2="'+yy+'" stroke-width="1" opacity=".5"/>';
-    g3+='<text class="ax" x="'+(L3-6)+'" y="'+(yy+3)+'" text-anchor="end">'+short(val)+'</text>';
-  }
-  if(lo3<0){ const yz=y3(0);
-    g3+='<line x1="'+L3+'" y1="'+yz+'" x2="'+(W3-10)+'" y2="'+yz+'" stroke="var(--bad)" stroke-width="1" stroke-dasharray="3 3"/>'; }
-  const iw3=(W3-L3-10)/(N-1);
-  const p3=cum.map((v,i)=>(L3+i*iw3)+","+y3(v)).join(" ");
-  g3+='<polyline points="'+p3+'" fill="none" stroke="var(--acc)" stroke-width="2"/>';
-  cum.forEach((v,i)=>{ if(i%2===0||i===N-1){
-    g3+='<circle cx="'+(L3+i*iw3)+'" cy="'+y3(v)+'" r="2.5" fill="var(--acc)"/>';
-    g3+='<text class="ax" x="'+(L3+i*iw3)+'" y="'+(H3-B3+16)+'" text-anchor="middle">'+M[i]+'</text>';}});
-  g3+='<text class="vl" x="'+(L3+2)+'" y="'+(T3-1)+'">итог за 12 мес: '+rub(cum[N-1])+' ₽</text>';
-  g3+="</svg>";
-  document.getElementById("chart3").innerHTML=g3;
 }
 
 function fitSticky(){
@@ -604,86 +425,17 @@ function setMode(m){
   mode=m;
   document.getElementById("mFact").setAttribute("aria-pressed",m==="fact");
   document.getElementById("mModel").setAttribute("aria-pressed",m==="model");
-  document.getElementById("mPlan").setAttribute("aria-pressed",m==="plan");
-  document.getElementById("planWrap").hidden=(m!=="plan");
-  document.getElementById("planSheet").hidden=false;
-  const tag=m==="plan"?" · план":(m==="fact"?" · факт":" · модель");
-  monSel.innerHTML=M.map((x,i)=>'<option value="'+i+'">'+x+' 2026'+
-    (m==="fact"?(i<F?" · факт":" · модель"):tag)+'</option>').join("");
+  monSel.innerHTML=M.map((x,i)=>'<option value="'+i+'">'+x+' 2026'+(m==="fact"&&i<F?" · факт":" · модель")+'</option>').join("");
   monSel.value=mon; update();
 }
 document.getElementById("mFact").onclick=()=>setMode("fact");
 document.getElementById("mModel").onclick=()=>setMode("model");
-document.getElementById("mPlan").onclick=()=>setMode("plan");
-document.getElementById("fold").onclick=()=>{
-  const anyOpen=ROWS.some(rw=>rw.sec!==undefined&&rw.fold&&!folded[rw.si]);
-  ROWS.forEach(rw=>{ if(rw.sec!==undefined&&rw.fold) folded[rw.si]=anyOpen; });
-  applyFold();
-};
-
-/* ---------- лист плана ---------- */
-function buildPlan(){
-  document.getElementById("pgrid").innerHTML=M.map((m,i)=>
-    '<div class="pcell"><label for="pv'+i+'">'+m+' 2026</label>'+
-    '<input id="pv'+i+'" type="number" step="10000" data-i="'+i+'">'+
-    '<span class="d" id="pd'+i+'"></span></div>').join("");
-  document.querySelectorAll("#pgrid input").forEach(inp=>{
-    inp.addEventListener("input",()=>{plan[+inp.dataset.i]=parseFloat(inp.value)||0; syncPlan(false); update();});
-  });
-  syncPlan(true);
-}
-function syncPlan(fill){
-  M.forEach((m,i)=>{
-    const inp=document.getElementById("pv"+i);
-    if(fill) inp.value=Math.round(plan[i]);
-    const prev=i?plan[i-1]:0;
-    document.getElementById("pd"+i).textContent=
-      i&&prev ? (plan[i]>=prev?"+":"−")+pc(Math.abs(plan[i]-prev)/prev).replace("%","%") : "";
-  });
-  const t=sum(plan);
-  document.getElementById("ptot").innerHTML=
-    "Год: <b>"+rub(t)+" ₽</b> · в среднем <b>"+rub(t/12)+" ₽</b> в месяц";
-}
-document.getElementById("pFact").onclick=()=>{
-  for(let i=0;i<N;i++) plan[i]=Math.round(i<7?revF(i):revF(6));
-  syncPlan(true); update();
-};
-document.getElementById("pFlat").onclick=()=>{
-  for(let i=1;i<N;i++) plan[i]=plan[0];
-  syncPlan(true); update();
-};
-document.getElementById("pApply").onclick=()=>{
-  const g=parseFloat(document.getElementById("pGrow").value)||0;
-  for(let i=1;i<N;i++) plan[i]=Math.round(plan[i-1]*(1+g/100));
-  syncPlan(true); update();
-};
-document.getElementById("pYear").onclick=()=>{
-  const cur=sum(plan);
-  const v=prompt("Годовая выручка, ₽ — разложу по месяцам в той же пропорции:",Math.round(cur));
-  const t=parseFloat(String(v).replace(/[^0-9.]/g,""));
-  if(!t||!cur) return;
-  for(let i=0;i<N;i++) plan[i]=Math.round(plan[i]*t/cur);
-  syncPlan(true); update();
-};
 document.getElementById("reset").onclick=()=>{
   Object.assign(D,base); subOn=true;
   const sw=document.getElementById("subOn"); if(sw) sw.checked=true;
   document.querySelectorAll("#tbl .inp").forEach(i=>i.value=(i.dataset.u==="%")?Math.round(D[i.dataset.k]*100)/100:Math.round(D[i.dataset.k]));
   update();
 };
-function setView(v){
-  const dash=(v==="dash");
-  document.getElementById("vModel").setAttribute("aria-pressed",!dash);
-  document.getElementById("vDash").setAttribute("aria-pressed",dash);
-  document.getElementById("viewModel").hidden=dash;
-  document.getElementById("viewDash").hidden=!dash;
-  document.querySelector("aside").style.display=dash?"none":"";
-  document.querySelector("main").style.gridTemplateColumns=dash?"minmax(0,1fr)":"";
-  if(!dash) fitSticky();
-}
-document.getElementById("vModel").onclick=()=>setView("model");
-document.getElementById("vDash").onclick=()=>setView("dash");
-
 const THEMES=[["gold","тёмно-золотая"],["light","светлая"],["dark","изумрудная"]];
 let ti=0;
 document.getElementById("theme").onclick=e=>{
@@ -694,213 +446,20 @@ document.getElementById("theme").onclick=e=>{
 document.getElementById("print").onclick=()=>window.print();
 document.getElementById("csv").onclick=()=>{
   const rows=[["Показатель","Параметр",...M,"Итого"]];
-  if(mode==="plan") rows.push(["План выручки (лист плана)","",...plan.map(v=>Math.round(v)),Math.round(sum(plan))]);
   document.querySelectorAll("#tbl tbody tr").forEach(tr=>{
     const cells=[...tr.querySelectorAll("th,td")].map(c=>{
       const inp=c.querySelector(".inp");
-      let t=inp?inp.value:c.textContent;
-      return t.replace(/[\u25B6\u25BC]/g,"").replace(/^\+\d+ стр\.$/,"").replace(/\u00a0/g," ").replace(/—/,"").trim();
+      return (inp?inp.value:c.textContent).replace(/\u00a0/g," ").replace(/—/,"");
     });
     rows.push(cells);
   });
   const csv="\ufeff"+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(";")).join("\r\n");
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  a.download="IRIX_финмодель_2026.csv"; a.click(); URL.revokeObjectURL(a.href);
+  a.download="IRIX_учебная_финмодель.csv"; a.click(); URL.revokeObjectURL(a.href);
 };
 
-/* ---------- экспорт в Excel (.xlsx) без библиотек ---------- */
-const CRCT=(()=>{const t=new Uint32Array(256);
-  for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
-function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRCT[(c^u8[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
-function zip(files){ /* files: [{name, data:Uint8Array}] — метод store */
-  const enc=new TextEncoder(); const chunks=[], central=[]; let off=0;
-  const u16=v=>[v&255,(v>>8)&255], u32=v=>[v&255,(v>>8)&255,(v>>16)&255,(v>>24)&255];
-  files.forEach(f=>{
-    const nm=enc.encode(f.name), crc=crc32(f.data), sz=f.data.length;
-    const lh=new Uint8Array([...u32(0x04034b50),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),
-      ...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0)]);
-    chunks.push(lh,nm,f.data);
-    central.push(new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),
-      ...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nm);
-    off+=lh.length+nm.length+sz;
-  });
-  const cd=central.reduce((a,c)=>a+c.length,0);
-  const end=new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(files.length),...u16(files.length),
-    ...u32(cd),...u32(off),...u16(0)]);
-  const all=[...chunks,...central,end];
-  const total=all.reduce((a,c)=>a+c.length,0), out=new Uint8Array(total); let p=0;
-  all.forEach(c=>{out.set(c,p);p+=c.length;});
-  return out;
-}
-const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-function colName(i){let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=(i-m-1)/26;}return s;}
-/* ячейка: {v:число|строка, s:стиль, t:"n"|"s"} */
-function sheetXml(rows,cols,freeze){
-  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
-    '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
-  if(freeze) x+='<sheetViews><sheetView workbookViewId="0"><pane xSplit="'+freeze[0]+'" ySplit="'+freeze[1]+
-    '" topLeftCell="'+colName(freeze[0])+(freeze[1]+1)+'" activePane="bottomRight" state="frozen"/></sheetView></sheetViews>';
-  if(cols) x+='<cols>'+cols.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>').join("")+'</cols>';
-  x+='<sheetData>';
-  rows.forEach((row,ri)=>{
-    x+='<row r="'+(ri+1)+'">';
-    row.forEach((c,ci)=>{
-      if(c===null||c===undefined||c==="") return;
-      const ref=colName(ci)+(ri+1);
-      const st=(typeof c==="object"&&c.s)?' s="'+c.s+'"':"";
-      const val=(typeof c==="object")?c.v:c;
-      if(typeof val==="number"&&isFinite(val)) x+='<c r="'+ref+'"'+st+'><v>'+val+'</v></c>';
-      else x+='<c r="'+ref+'"'+st+' t="inlineStr"><is><t xml:space="preserve">'+esc(val)+'</t></is></c>';
-    });
-    x+='</row>';
-  });
-  return x+'</sheetData></worksheet>';
-}
-function buildXlsx(sheets){ /* sheets: [{name, rows, cols}] */
-  const enc=new TextEncoder(), F=[];
-  const add=(n,str)=>F.push({name:n,data:enc.encode(str)});
-  add("[Content_Types].xml",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
-    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'+
-    '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'+
-    '<Default Extension="xml" ContentType="application/xml"/>'+
-    '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+
-    sheets.map((s,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join("")+
-    '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+
-    '</Types>');
-  add("_rels/.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
-    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
-    '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
-  add("xl/workbook.xml",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
-    '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '+
-    'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+
-    sheets.map((s,i)=>'<sheet name="'+esc(s.name)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join("")+
-    '</sheets></workbook>');
-  add("xl/_rels/workbook.xml.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
-    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
-    sheets.map((s,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join("")+
-    '<Relationship Id="rIdS" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>');
-  /* стили: 0 обычный, 1 жирный, 2 число, 3 число жирное, 4 процент, 5 заголовок, 6 секция */
-  add("xl/styles.xml",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
-    '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
-    '<numFmts count="2"><numFmt numFmtId="200" formatCode="#,##0"/><numFmt numFmtId="201" formatCode="0.0%"/></numFmts>'+
-    '<fonts count="4">'+
-      '<font><sz val="11"/><name val="Calibri"/></font>'+
-      '<font><b/><sz val="11"/><name val="Calibri"/></font>'+
-      '<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'+
-      '<font><b/><sz val="12"/><color rgb="FF6B4E00"/><name val="Calibri"/></font>'+
-    '</fonts>'+
-    '<fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>'+
-      '<fill><patternFill patternType="solid"><fgColor rgb="FF2E2A20"/><bgColor indexed="64"/></patternFill></fill>'+
-      '<fill><patternFill patternType="solid"><fgColor rgb="FFF3EAD2"/><bgColor indexed="64"/></patternFill></fill></fills>'+
-    '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>'+
-      '<border><left/><right/><top style="thin"><color rgb="FFBFA76A"/></top><bottom/><diagonal/></border></borders>'+
-    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'+
-    '<cellXfs count="8">'+
-      '<xf xfId="0" numFmtId="0" fontId="0" fillId="0" borderId="0"/>'+
-      '<xf xfId="0" numFmtId="0" fontId="1" fillId="0" borderId="0" applyFont="1"/>'+
-      '<xf xfId="0" numFmtId="200" fontId="0" fillId="0" borderId="0" applyNumberFormat="1"/>'+
-      '<xf xfId="0" numFmtId="200" fontId="1" fillId="0" borderId="1" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'+
-      '<xf xfId="0" numFmtId="201" fontId="0" fillId="0" borderId="0" applyNumberFormat="1"/>'+
-      '<xf xfId="0" numFmtId="0" fontId="2" fillId="2" borderId="0" applyFont="1" applyFill="1"/>'+
-      '<xf xfId="0" numFmtId="0" fontId="3" fillId="3" borderId="0" applyFont="1" applyFill="1"/>'+
-      '<xf xfId="0" numFmtId="201" fontId="1" fillId="0" borderId="1" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'+
-    '</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>');
-  sheets.forEach((s,i)=>add("xl/worksheets/sheet"+(i+1)+".xml",sheetXml(s.rows,s.cols,s.freeze)));
-  return zip(F);
-}
-function exportXlsx(){
-  const r=window._last||calc();
-  const T={rev:sum(r.rev),dir:sum(r.direct),gross:sum(r.gross),fix:sum(r.fix),fin:sum(r.fin),
-           eb:sum(r.ebitda),np:sum(r.np),sub:sum(r.sub)};
-  const bep=T.gross>0?(T.fix+T.fin)/(T.gross/T.rev):0;
-  const HD=["Показатель","Параметр",...M,"Итого"];
-  const N_=5,P_=4,B_=1,BN=3,BP=7,SEC=6,HDR=5;
-
-  /* лист 1 — Дашборд */
-  const d=[];
-  d.push([{v:"IRIX PROFIT · СВОДКА",s:SEC}]);
-  d.push([mode==="plan"?"Режим: план от выручки":mode==="fact"?"Режим: факт янв–июн + модель июл–дек":"Режим: все месяцы по параметрам"]);
-  d.push([]);
-  d.push([{v:"Показатель",s:HDR},{v:"12 месяцев",s:HDR},{v:"% от выручки",s:HDR},{v:"В среднем в месяц",s:HDR}]);
-  const drow=(n,v,pct,bold)=>d.push([{v:n,s:bold?B_:0},{v:Math.round(v),s:bold?BN:N_},
-      pct?{v:v/T.rev,s:P_}:"",{v:Math.round(v/12),s:N_}]);
-  drow("Выручка",T.rev,true,1);
-  drow("Прямые (производственные) затраты",T.dir,true);
-  drow("в том числе субподряд",T.sub,true);
-  drow("Валовая прибыль",T.gross,true,1);
-  drow("Постоянные расходы",T.fix,true);
-  drow("EBITDA",T.eb,true,1);
-  drow("Проценты и амортизация",T.fin,true);
-  drow("Чистая прибыль",T.np,true,1);
-  d.push([]);
-  d.push([{v:"Коэффициенты",s:HDR},{v:"Значение",s:HDR}]);
-  d.push(["Маржинальность",{v:T.gross/T.rev,s:P_}]);
-  d.push(["Рентабельность по EBITDA",{v:T.eb/T.rev,s:P_}]);
-  d.push(["Рентабельность по чистой прибыли",{v:T.np/T.rev,s:P_}]);
-  d.push(["Доля прямых затрат",{v:T.dir/T.rev,s:P_}]);
-  d.push(["Доля постоянных расходов",{v:T.fix/T.rev,s:P_}]);
-  d.push(["Точка безубыточности, ₽",{v:Math.round(bep),s:N_}]);
-  d.push(["Запас финансовой прочности",{v:(T.rev-bep)/T.rev,s:P_}]);
-  d.push([]);
-  d.push([{v:"Помесячно",s:HDR},...M.map(m=>({v:m,s:HDR})),{v:"Итого",s:HDR}]);
-  const mrow=(n,arr,bold)=>d.push([{v:n,s:bold?B_:0},...arr.map(v=>({v:Math.round(v),s:bold?BN:N_})),
-      {v:Math.round(sum(arr)),s:BN}]);
-  mrow("Выручка",r.rev,1);
-  mrow("Прямые затраты",r.direct);
-  mrow("Валовая прибыль",r.gross,1);
-  mrow("Постоянные расходы",r.fix);
-  mrow("EBITDA",r.ebitda,1);
-  mrow("Чистая прибыль",r.np,1);
-  let acc=0; mrow("Чистая прибыль накопительно",r.np.map(v=>acc+=v));
-  d.push([{v:"Маржинальность",s:0},...r.gross.map((v,i)=>({v:v/r.rev[i],s:P_})),{v:T.gross/T.rev,s:BP}]);
-
-  /* лист 2 — Модель */
-  const m=[HD.map(h=>({v:h,s:HDR}))];
-  ROWS.forEach(rw=>{
-    if(rw.sec!==undefined){ m.push([{v:rw.sec,s:SEC}]); return; }
-    const v=rw.get(r);
-    const st=rw.pct?P_:(rw.tot?BN:N_);
-    const tot=rw.totv?rw.totv(r):(rw.pct?sum(v)/N:sum(v));
-    m.push([{v:(rw.sub?"    ":"")+rw.n,s:rw.tot?B_:0},
-            rw.key?(rw.unit==="%"?{v:D[rw.key]/100,s:P_}:{v:Math.round(D[rw.key]),s:N_}):"",
-            ...v.map(x=>({v:rw.pct?x:Math.round(x),s:st})),
-            {v:rw.pct?tot:Math.round(tot),s:rw.pct?BP:BN}]);
-  });
-
-  /* лист 3 — Параметры */
-  const pr=[[{v:"Параметр",s:HDR},{v:"Значение",s:HDR},{v:"Единица",s:HDR}]];
-  pr.push([{v:"Производство — % от выручки",s:SEC}]);
-  DATA.direct.forEach(([n])=>pr.push([n,{v:D["p:"+n]/100,s:P_},"% от выручки"]));
-  pr.push([SUBN+(subOn?"":" (выключен)"),{v:D["p:"+SUBN]/100,s:P_},"% от выручки"]);
-  pr.push([{v:"Постоянные расходы — ₽ в месяц",s:SEC}]);
-  DATA.fixed.forEach(([n])=>pr.push([n,{v:Math.round(D["f:"+n]),s:N_},"₽/мес"]));
-  pr.push(["Коммунальные услуги",{v:D.util/100,s:P_},"% от аренды"]);
-  pr.push([{v:"Зарплата АУП — ₽ в месяц",s:SEC}]);
-  DATA.salary.forEach(([n])=>pr.push([n,{v:Math.round(D["z:"+n]),s:N_},"₽/мес"]));
-  pr.push([{v:"Финансовые статьи — ₽ в месяц",s:SEC}]);
-  DATA.fin.forEach(([n])=>pr.push([n,{v:Math.round(D["o:"+n]),s:N_},"₽/мес"]));
-  if(mode==="plan"){
-    pr.push([{v:"Лист плана — выручка, ₽",s:SEC}]);
-    M.forEach((mm,i)=>pr.push([mm+" 2026",{v:Math.round(plan[i]),s:N_},"₽"]));
-    pr.push([{v:"Итого за год",s:B_},{v:Math.round(sum(plan)),s:BN},"₽"]);
-  } else {
-    pr.push(["Рост выручки к пред. месяцу",{v:D.growth/100,s:P_},"% (авг–дек)"]);
-  }
-
-  const wide=[38,12,...M.map(()=>13),14];
-  const data=buildXlsx([
-    {name:"Дашборд",rows:d,cols:[36,14,15,17,...M.slice(3).map(()=>12),13],freeze:[1,4]},
-    {name:"Модель",rows:m,cols:wide,freeze:[2,1]},
-    {name:"Параметры",rows:pr,cols:[42,14,16],freeze:[1,1]}
-  ]);
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([data],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
-  a.download="IRIX_финмодель_2026.xlsx"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1500);
-}
-document.getElementById("xls").onclick=exportXlsx;
-
-buildTable(); buildPlan(); applyFold(); update();
+buildTable(); update();
 </script>
 </body>
 </html>
